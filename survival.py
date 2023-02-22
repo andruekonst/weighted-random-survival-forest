@@ -381,15 +381,15 @@ class RandomSurvivalForest():
         lam = self.optimization_lambda # 0.001
         M = len(J)
 
-        objective = cp.Minimize(cp.sum_entries(xi) / M + lam * cp.norm2(w))
-        constraints = [xi >= 0, xi >= deltas * w, cp.sum_entries(w) == 1, w >= self.simplex_lower_boundary]
+        objective = cp.Minimize(cp.sum(xi) / M + lam * cp.norm2(w))
+        constraints = [xi >= 0, xi >= deltas * w, cp.sum(w) == 1, w >= self.simplex_lower_boundary]
         prob = cp.Problem(objective, constraints)
 
         self.print("Problem is prepared")
 
         result = prob.solve()
         self.print("Problem status: {}".format(prob.status))
-        self.weights = list(w.value.A.flatten())
+        self.weights = list(w.value.flatten())
         self.print("Weights: {}".format(self.weights))
 
     def compute_survival(self, row, tree):
